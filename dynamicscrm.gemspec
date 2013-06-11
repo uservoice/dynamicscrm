@@ -19,5 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_development_dependency "rspec", '>= 1.0.5'
-#  s.add_runtime_dependency 'ezcrypto', '>= 0.7.2'
+  s.add_runtime_dependency 'httparty'
+  s.add_runtime_dependency 'savon'
+  s.add_runtime_dependency 'awesome_print'
 end

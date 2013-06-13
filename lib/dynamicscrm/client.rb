@@ -1,8 +1,10 @@
 require 'httparty'
+require 'uuid'
 require 'awesome_print'
 
+config = YAML.load_file('config.yml')
 
-wsdl = HTTParty.get('https://uservoicedev.api.crm.dynamics.com/XRMServices/2011/Organization.svc?wsdl')
+wsdl = HTTParty.get("#{config['url']}?wsdl")
 wsdl_import_url = wsdl['definitions']['import']['location']
 wsdl_import_all_definitions = HTTParty.get(wsdl_import_url)['definitions']['Policy']['ExactlyOne']['All']
 urn_address = wsdl_import_all_definitions['AuthenticationPolicy'].first['SecureTokenService']['LiveTrust']['AppliesTo']
@@ -20,7 +22,7 @@ security_token_soap_template = "
     xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">
     <s:Header>
         <a:Action s:mustUnderstand=\"1\">http://schemas.xmlsoap.org/ws/2005/02/trust/RST/Issue</a:Action>
-        <a:MessageID>urn:uuid:#{message_id}</a:MessageID>
+        <a:MessageID>urn:uuid:#{UUID.generate}</a:MessageID>
         <a:ReplyTo> <a:Address>http://www.w3.org/2005/08/addressing/anonymous</a:Address> </a:ReplyTo>
         <VsDebuggerCausalityData xmlns=\"http://schemas.microsoft.com/vstudio/diagnostics/servicemodelsink\">uIDPo4TBVw9fIMZFmc7ZFxBXIcYAAAAAbd1LF/fnfUOzaja8sGev0GKsBdINtR5Jt13WPsZ9dPgACQAA </VsDebuggerCausalityData>
         <a:To s:mustUnderstand=\"1\">{sts_endpoint}</a:To>
@@ -28,8 +30,8 @@ security_token_soap_template = "
             xmlns:o=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\">
             <u:Timestamp u:Id=\"_0\"> <u:Created>#{time_created}Z</u:Created> <u:Expires>#{time_expires}Z</u:Expires> </u:Timestamp>
             <o:UsernameToken u:Id=\"uuid-14bed392-2320-44ae-859d-fa4ec83df57a-1\">
-                <o:Username>#{username}</o:Username>
-                <o:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">#{password}</o:Password>
+                <o:Username>#{config['username']}</o:Username>
+                <o:Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">#{config['password']}</o:Password>
             </o:UsernameToken>
         </o:Security>
     </s:Header>

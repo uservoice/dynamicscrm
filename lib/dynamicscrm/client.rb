@@ -4,6 +4,8 @@ require 'awesome_print'
 require 'nokogiri'
 
 module DynamicsCRM
+  AuthenticationError = Class.new(StandardError)
+
   class Parser < HTTParty::Parser
     SupportedFormats = {
       'application/soap+xml; charset=UTF-8' => :dynamicsxml
@@ -21,8 +23,17 @@ module DynamicsCRM
     def get(*args)
       self.class.get(*args)
     end
+
     def post(*args)
-      self.class.post(*args)
+      resp = self.class.post(*args)
+
+      fault_reason = resp.xpath("//s:Fault/s:Reason", :s => 'http://www.w3.org/2003/05/soap-envelope').inner_text
+
+      unless fault_reason.nil? || fault_reason == ''
+        raise DynamicsCRM::AuthenticationError.new(fault_reason)
+      end
+
+      resp
     end
   end
 end
@@ -150,7 +161,4 @@ account_name = retrieve_response_xml.xpath("//b:KeyValuePairOfstringanyType[c:ke
 zipcode = retrieve_response_xml.xpath("//b:KeyValuePairOfstringanyType[c:key='address1_postalcode']/c:value/text()", namespaces).inner_text
 
 
-ap(
-  account_name: account_name,
-  zipcode: zipcode
-)
+ap( :account_name => account_name, :zipcode => zipcode)

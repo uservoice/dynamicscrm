@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "dynamicscrm"
   s.version     = DynamicsCRM::VERSION
   s.authors     = ["Raimo Tuisku"]
-  s.email       = ["dev@usevoice.com"]
+  s.email       = ["dev@uservoice.com"]
   s.homepage    = "http://developer.uservoice.com"
   s.summary     = %q{Client library for DynamicsCRM API}
   s.description = %q{The gem provides Ruby-bindings to DynamicsCRM API}

@@ -1,6 +1,5 @@
 require 'httparty'
 require 'uuid'
-require 'awesome_print'
 require 'nokogiri'
 
 module DynamicsCRM

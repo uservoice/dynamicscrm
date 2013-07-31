@@ -34,8 +34,7 @@ module DynamicsCRM
     def post(*args)
       resp = self.class.post(*args)
 
-      fault_reason = resp.xpath("//s:Fault/s:Reason", :s => 'http://www.w3.org/2003/05/soap-envelope').inner_text
-
+      fault_reason = resp.xpath("//s:Fault/s:Reason", {'s' => 'http://www.w3.org/2003/05/soap-envelope'}).inner_text
       unless fault_reason.nil? || fault_reason == ''
         raise DynamicsCRM::AuthenticationError.new(fault_reason)
       end
@@ -158,30 +157,3 @@ module DynamicsCRM
     end
   end
 end
-
-config = YAML.load_file('config.yml')
-client = DynamicsCRM::Client.new(config['url'], config['username'], config['password'])
-
-resp_xml = client.operation("
-    <Retrieve xmlns=\"http://schemas.microsoft.com/xrm/2011/Contracts/Services\">
-      <entityName>incident</entityName>
-      <id>CEF34564-A3F8-E211-883F-B4B52F67745E</id>
-      <columnSet xmlns:b=\"http://schemas.microsoft.com/xrm/2011/Contracts\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\">
-        <b:AllColumns>false</b:AllColumns>
-        <b:Columns xmlns:c=\"http://schemas.microsoft.com/2003/10/Serialization/Arrays\">
-          <c:string>title</c:string>
-        </b:Columns>
-      </columnSet>
-    </Retrieve>
-    ")
-
-namespaces = {
-  b: "http://schemas.microsoft.com/xrm/2011/Contracts",
-  c: "http://schemas.datacontract.org/2004/07/System.Collections.Generic"
-}
-
-
-
-ap(
-  :title => resp_xml.xpath("//b:KeyValuePairOfstringanyType[c:key='title']/c:value/text()", namespaces).inner_text
-)

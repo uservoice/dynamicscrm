@@ -21,6 +21,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", '>= 1.0.5'
   s.add_runtime_dependency 'httparty'
   s.add_runtime_dependency 'uuid'
-  s.add_runtime_dependency 'awesome_print'
   s.add_runtime_dependency 'nokogiri'
 end

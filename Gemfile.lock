@@ -10,14 +10,14 @@ GEM
   remote: http://rubygems.org/
   specs:
     diff-lcs (1.2.4)
-    httparty (0.11.0)
-      multi_json (~> 1.0)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
     macaddr (1.6.1)
       systemu (~> 2.5.0)
+    mini_mime (1.1.2)
     mini_portile2 (2.4.0)
-    multi_json (1.7.6)
-    multi_xml (0.5.4)
+    multi_xml (0.6.0)
     nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     rspec (2.13.0)
